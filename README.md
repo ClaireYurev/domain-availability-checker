@@ -2,7 +2,7 @@
 A simple program that uses RapidAPI's domain name availability API for checking the availability of domain names.
 
 # How it works
-Generate Combinations: The generate_combinations function generates all 4-character combinations of the English alphabet.
+Generate Combinations: The generate_combinations function generates all 5-character combinations of the English alphabet.
 Check Domain Availability: The check_domain_availability function uses the RapidAPI endpoint to check if a domain is available.
 Check All Domains: The check_all_domains function iterates over all combinations, checks their availability, and stores available domains in a list. It includes:
 Rate Limiting Logic: It waits for delay_between_requests seconds between each request.
