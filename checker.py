@@ -1,7 +1,5 @@
 import itertools
 import requests
-import time
-import threading
 import os
 import sys
 
