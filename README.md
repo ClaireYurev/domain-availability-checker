@@ -1,4 +1,4 @@
-# Domain Availability Checker – RapidAPI Integration
+# Domain Availability Checker - RapidAPI Integration
 
 `domain-availability-checker` is a Python tool for **batch checking domain name availability** using a RapidAPI-powered domain service.
 
