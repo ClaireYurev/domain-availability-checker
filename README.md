@@ -1,11 +1,56 @@
-# domain-availability-checker
-A simple program that uses RapidAPI's domain name availability API for checking the availability of domain names.
+# Domain Availability Checker – RapidAPI Integration
 
-# How it works
-Generate Combinations: The generate_combinations function generates all 5-character combinations of the English alphabet.
-Check Domain Availability: The check_domain_availability function uses the RapidAPI endpoint to check if a domain is available.
-Check All Domains: The check_all_domains function iterates over all combinations, checks their availability, and stores available domains in a list. It includes:
-Rate Limiting Logic: It waits for delay_between_requests seconds between each request.
-Hourly Reset: After 999 requests, it waits for an hour before continuing.
-Save Results: The script saves all available domains to a file named available_domains.txt.
-By including the delay_between_requests and the hourly reset, this script ensures that it doesn't exceed the 999 requests per hour limit. You can run this script to generate and check the availability of 4-character .com domains efficiently within the given constraints.
+`domain-availability-checker` is a Python tool for **batch checking domain name availability** using a RapidAPI-powered domain service.
+
+It is designed for **long-running jobs** that may process tens or hundreds of thousands of domains, with:
+
+- Explicit configuration for API keys & endpoints
+- Rate limiting to stay under RapidAPI quotas
+- Retry logic with exponential backoff (including 429 handling)
+- Robust error handling for network and server issues
+
+You can point it at any RapidAPI "domain availability" API, such as:
+- WhoisXMLAPI's *Domain Availability* service exposed via RapidAPI   
+- Other domain APIs listed in RapidAPI's domain category (e.g. *Domain Availability*, *Domain Checker*, or bulk domain checkers)   
+
+> **Note:** Different providers use slightly different paths and JSON fields. This project makes those parts configurable and keeps the "batch & reliability" logic reusable.
+
+---
+
+## Features
+
+- **RapidAPI integration**
+  - Uses standard RapidAPI headers: `x-rapidapi-key` and `x-rapidapi-host`   
+- **Rate limiting**
+  - Sliding-window limiter with configurable `RATE_LIMIT_PER_MINUTE` / `RATE_LIMIT_PERIOD_SECONDS`
+- **Resilient against throttling**
+  - Handles HTTP `429` with `Retry-After` if provided, otherwise exponential backoff
+- **Retries for transient errors**
+  - Retries network timeouts and 5xx status codes
+- **Batch-friendly CLI**
+  - Read domains from a file or stdin, emit CSV results
+- **Extensible parsing**
+  - Works with common response formats (e.g. `DomainInfo.domainAvailability` or a top-level `available` flag), and can be customized for your particular API.   
+
+---
+
+## Requirements
+
+- Python 3.10+
+- A RapidAPI account & subscription to a domain availability API (e.g. WhoisXMLAPI Domain Availability on RapidAPI)   
+- Dependencies (installed via `requirements.txt`):
+  - [`requests`](https://pypi.org/project/requests/)
+  - [`python-dotenv`](https://pypi.org/project/python-dotenv/) (optional, for `.env` support)
+
+---
+
+## Installation
+
+Clone the repo and install dependencies:
+
+```bash
+git clone https://github.com/<your-username>/domain-availability-checker.git
+cd domain-availability-checker
+python -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
